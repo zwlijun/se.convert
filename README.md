@@ -1,7 +1,7 @@
 # SE.Convert
 
 ---
-
+<pre>
 convert.reg  //注册表（需要修改里面的路径）
 convert.cmd  //命令行
 convert.wsf  //windows宿主脚本
@@ -18,3 +18,4 @@ convert.js   //转换JS
    STEP2: 展开 HKEY_CLASSES_ROOT\AllFilesystemObjects\
    STEP3: 删除 shell 下面相关项
 3、双击convert.reg
+</pre>

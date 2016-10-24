@@ -1,0 +1,99 @@
+<job>
+<script language="vbscript">
+Function IsUTF8(bin)
+    Dim size:size = UBound(bin)
+    Dim tmp()
+    Dim text
+    Dim ps
+    Dim pattern
+    
+    ReDim tmp(size)
+    
+    For i = 0 To size
+        tmp(i) = ChrW(AscB(MidB(bin, i+1, 1)))
+    Next
+    
+    text = Join(tmp, "")
+    
+    Set pattern = new RegExp
+    
+    ps = "[\xC0-\xDF]([^\x80-\xBF]|$)"
+    ps = ps & "|[\xE0-\xEF].{0,1}([^\x80-\xBF]|$)"
+    ps = ps & "|[\xF0-\xF7].{0,2}([^\x80-\xBF]|$)"
+    ps = ps & "|[\xF8-\xFB].{0,3}([^\x80-\xBF]|$)"
+    ps = ps & "|[\xFC-\xFD].{0,4}([^\x80-\xBF]|$)"
+    ps = ps & "|[\xFE-\xFE].{0,5}([^\x80-\xBF]|$)"
+    ps = ps & "|[\x00-\x7F][\x80-\xBF]"
+    ps = ps & "|[\xC0-\xDF].[\x80-\xBF]"
+    ps = ps & "|[\xE0-\xEF]..[\x80-\xBF]"
+    ps = ps & "|[\xF0-\xF7]...[\x80-\xBF]"
+    ps = ps & "|[\xF8-\xFB]....[\x80-\xBF]"
+    ps = ps & "|[\xFC-\xFD].....[\x80-\xBF]"
+    ps = ps & "|[\xFE-\xFE]......[\x80-\xBF]"
+    ps = ps & "|^[\x80-\xBF]"
+    
+    pattern.Pattern = ps
+    
+    IsUTF8 = (Not pattern.Test(text))
+End Function
+
+Function GetFileEncode(pathname)
+    Dim stream
+    Dim bin
+    Dim first
+    Dim second
+    Dim third
+    Dim fourth
+    Dim charset
+    
+    set stream = CreateObject("ADODB.Stream")
+    
+    stream.Type = 1
+    stream.Mode = 3
+    stream.Open
+    stream.Position = 0
+    
+    WScript.Echo pathname
+    
+    stream.LoadFromFile pathname
+    
+    bin = stream.read()
+    first = AscB(MidB(bin, 1, 1))
+    second = AscB(MidB(bin, 2, 1))
+    third = AscB(MidB(bin, 3, 1))
+    fourth = AscB(MidB(bin, 4, 1))
+    
+    WScript.Echo Hex(first)
+    WScript.Echo Hex(second)
+    WScript.Echo Hex(third)
+    WScript.Echo Hex(fourth)
+    
+    if first = &HEF And second = &HBB And third = &HBF then
+        charset = "utf-8"
+    elseif first = &HFF And second = &HFE then
+        charset = "utf-16(Little Endian)"
+    elseif first = &HFE And second = &HFF then
+        charset = "utf-16(Big Endian)"
+    elseif first = &HFF And second = &HFE And third = &H00 And fourth = &H00 then
+        charset = "utf-32(Little Endian)"
+    elseif first = &H00 And second = &H00 And third = &HFE And fourth = &HFF then
+        charset = "utf-32(Big Endian)"
+    else
+        if IsUTF8(bin) then
+            charset = "utf-8(without BOM)"
+        else
+            charset = "gb2312"
+        end if
+    end if
+    
+    stream.Close
+    set stream = Nothing
+    
+    WScript.Echo charset
+    
+    GetFileEncode = charset
+End Function
+</script>
+<script language="javascript" src="util.js"></script>
+<script language="javascript" src="convert.js"></script>
+</job>

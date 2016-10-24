@@ -1,0 +1,19 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\AllFilesystemObjects\shell\Convert to ANSI]
+@="Convert to ANSI"
+
+[HKEY_CLASSES_ROOT\AllFilesystemObjects\shell\Convert to ANSI\command]
+@="D:\\workproject\\convert\\wsh\\convert.cmd %1 gb2312 0"
+
+[HKEY_CLASSES_ROOT\AllFilesystemObjects\shell\Convert to UTF8]
+@="Convert to UTF8"
+
+[HKEY_CLASSES_ROOT\AllFilesystemObjects\shell\Convert to UTF8\command]
+@="D:\\workproject\\convert\\wsh\\convert.cmd %1 utf-8 0"
+
+[HKEY_CLASSES_ROOT\AllFilesystemObjects\shell\Convert to UTF8 without BOM]
+@="Convert to UTF8 without BOM"
+
+[HKEY_CLASSES_ROOT\AllFilesystemObjects\shell\Convert to UTF8 without BOM\command]
+@="D:\\workproject\\convert\\wsh\\convert.cmd %1 utf-8 1"

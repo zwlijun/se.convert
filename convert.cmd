@@ -1,0 +1,1 @@
+cscript D:\workproject\convert\wsh\convert.wsf %1 %2 %3 %4

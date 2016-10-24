@@ -1,6 +1,5 @@
 # SE.Convert
 
----
 <pre>
 convert.reg  //注册表（需要修改里面的路径）
 convert.cmd  //命令行
